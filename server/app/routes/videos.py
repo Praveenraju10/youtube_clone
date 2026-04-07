@@ -29,7 +29,7 @@ async def enrich_videos(videos: list, db) -> list:
     return result
 
 
-@router.get("/")
+@router.get("")
 async def get_videos(
     search: Optional[str] = None,
     category: Optional[str] = None,
@@ -86,7 +86,7 @@ async def get_video(video_id: str, db=Depends(get_db)):
     return video
 
 
-@router.post("/", status_code=201)
+@router.post("", status_code=201)
 async def upload_video(
     title: str = Form(...),
     description: str = Form(...),
