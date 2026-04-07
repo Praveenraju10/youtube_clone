@@ -53,7 +53,16 @@ async def register(user_data: UserCreate, db=Depends(get_db)):
         "access_token": create_access_token(user_id),
         "refresh_token": create_refresh_token(user_id),
         "token_type": "bearer",
-        "user": {"id": user_id, "name": user_data.name, "email": user_data.email, "avatar": None, "subscribers": 0},
+        "user": {
+            "id": user_id, 
+            "name": user_data.name, 
+            "email": user_data.email, 
+            "avatar": None, 
+            "subscribers": 0,
+            "subscribed_to": [],
+            "liked_videos": [],
+            "disliked_videos": [],
+        },
     }
 
 
@@ -67,7 +76,16 @@ async def login(user_data: UserLogin, db=Depends(get_db)):
         "access_token": create_access_token(user["_id"]),
         "refresh_token": create_refresh_token(user["_id"]),
         "token_type": "bearer",
-        "user": {"id": user["_id"], "name": user["name"], "email": user["email"], "avatar": user.get("avatar"), "subscribers": user.get("subscribers", 0)},
+        "user": {
+            "id": user["_id"], 
+            "name": user["name"], 
+            "email": user["email"], 
+            "avatar": user.get("avatar"), 
+            "subscribers": user.get("subscribers", 0),
+            "subscribed_to": user.get("subscribed_to", []),
+            "liked_videos": user.get("liked_videos", []),
+            "disliked_videos": user.get("disliked_videos", []),
+        },
     }
 
 

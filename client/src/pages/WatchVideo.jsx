@@ -21,7 +21,7 @@ function timeAgo(date) {
 
 export default function WatchVideo() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [video, setVideo] = useState(null);
   const [related, setRelated] = useState([]);
   const [comments, setComments] = useState([]);
@@ -39,6 +39,7 @@ export default function WatchVideo() {
       setVideo(data);
       if (user) {
         setLiked(user.liked_videos?.includes(id));
+        setDisliked(user.disliked_videos?.includes(id));
         setSubscribed(user.subscribed_to?.includes(data.user_id));
       }
     });
@@ -56,16 +57,37 @@ export default function WatchVideo() {
   const handleLike = async () => {
     if (!user) return;
     const { data } = await api.put(`/videos/${id}/like`);
-    setLiked(data.action === 'liked');
+    const isLiked = data.action === 'liked';
+    setLiked(isLiked);
     setDisliked(false);
-    setVideo(v => ({ ...v, likes: v.likes + (data.action === 'liked' ? 1 : -1) }));
+    setVideo(v => ({ ...v, likes: v.likes + (isLiked ? 1 : -1) }));
+    
+    // Update global user state
+    const newLiked = isLiked 
+      ? [...(user.liked_videos || []), id] 
+      : (user.liked_videos || []).filter(vid => vid !== id);
+    const newDisliked = (user.disliked_videos || []).filter(vid => vid !== id);
+    updateUser({ liked_videos: newLiked, disliked_videos: newDisliked });
   };
 
   const handleDislike = async () => {
     if (!user) return;
     const { data } = await api.put(`/videos/${id}/dislike`);
-    setDisliked(data.action === 'disliked');
+    const isDisliked = data.action === 'disliked';
+    setDisliked(isDisliked);
+    
+    // If it was liked before, decrement likes count
+    if (isDisliked && liked) {
+      setVideo(v => ({ ...v, likes: v.likes - 1 }));
+    }
     setLiked(false);
+
+    // Update global user state
+    const newDisliked = isDisliked 
+      ? [...(user.disliked_videos || []), id] 
+      : (user.disliked_videos || []).filter(vid => vid !== id);
+    const newLiked = (user.liked_videos || []).filter(vid => vid !== id);
+    updateUser({ liked_videos: newLiked, disliked_videos: newDisliked });
   };
 
   const handleSubscribe = async () => {
@@ -73,9 +95,11 @@ export default function WatchVideo() {
     if (subscribed) {
       await api.put(`/users/${video.user_id}/unsubscribe`);
       setSubscribed(false);
+      updateUser({ subscribed_to: (user.subscribed_to || []).filter(uid => uid !== video.user_id) });
     } else {
       await api.put(`/users/${video.user_id}/subscribe`);
       setSubscribed(true);
+      updateUser({ subscribed_to: [...(user.subscribed_to || []), video.user_id] });
     }
   };
 
