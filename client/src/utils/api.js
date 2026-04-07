@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/api' });
+const BASE_URL = 'https://youtube-clone-j6li.vercel.app/api';
+const api = axios.create({ baseURL: BASE_URL });
 
 // Attach access token to every request
 api.interceptors.request.use((config) => {
@@ -19,7 +20,7 @@ api.interceptors.response.use(
       const refresh = localStorage.getItem('refresh_token');
       if (refresh) {
         try {
-          const { data } = await axios.post('/api/auth/refresh', { refresh_token: refresh });
+          const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refresh_token: refresh });
           localStorage.setItem('access_token', data.access_token);
           original.headers.Authorization = `Bearer ${data.access_token}`;
           return api(original);
