@@ -1,0 +1,33 @@
+.channel-header {
+  display: flex; align-items: center; gap: 24px;
+  padding: 32px 0; border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.channel-pic {
+  width: 96px; height: 96px;
+  border-radius: var(--radius-full); object-fit: cover;
+}
+.channel-pic-ph {
+  width: 96px; height: 96px;
+  border-radius: var(--radius-full);
+  background: var(--accent); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; font-weight: 700;
+}
+
+.channel-name-big { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.channel-stats { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+
+.channel-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.channel-tab {
+  padding: 12px 20px; font-size: 14px; font-weight: 500;
+  color: var(--text-secondary); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition);
+}
+.channel-tab.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }

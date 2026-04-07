@@ -1,0 +1,22 @@
+.skeleton-card { cursor: default; }
+
+.skeleton-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+}
+
+.skeleton-info { display: flex; gap: 12px; }
+
+.skeleton-avatar {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.skeleton-meta { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+.skeleton-line { height: 12px; border-radius: var(--radius-sm); }
+.skeleton-line.long { width: 90%; }
+.skeleton-line.medium { width: 60%; }
+.skeleton-line.short { width: 40%; }
